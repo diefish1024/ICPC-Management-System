@@ -29,6 +29,7 @@ private:
     RBNode* successor(RBNode* x) const;
     
     void update_size(RBNode* x);
+    void size_fixup(RBNode* x);
 
     void clear_recursive(RBNode* x);
 
@@ -41,7 +42,6 @@ public:
     void remove(RBNode* z);
 
     int get_rank(Team* team) const;
-
     std::vector<Team*> get_ranklist() const;
 
     void clear();

@@ -106,6 +106,7 @@ void RankTree::insert(RBNode* z) {
     z->right = NIL;
     z->color = R;
     insert_fixup(z);
+    size_fixup(z);
 }
 
 void RankTree::insert_fixup(RBNode* x) {
@@ -191,37 +192,30 @@ void RankTree::remove(RBNode* z) {
     if (y->color == B) {
         remove_fixup(x);
     }
+    size_fixup(x);
 
     delete y;
-
-    // update size
-    RBNode* cur = (x != NIL) ? x : y->parent;
-    while (cur != NIL) {
-        update_size(cur);
-        cur = cur->parent;
-    }
 }
 
 void RankTree::remove_fixup(RBNode* x) {
-    // 当 x 是根节点或不再是双重黑时终止循环
     while (x != root && x->color == B) {
-        if (x == x->parent->left) { // Case: x 是左孩子
-            RBNode* w = x->parent->right; // 兄弟节点
+        if (x == x->parent->left) {
+            RBNode* w = x->parent->right;
 
-            // Case 1: 兄弟是红色 -> 转换为兄弟为黑的情况
+            // Case 1: w is RED -> w is BLACK
             if (w->color == R) {
                 w->color = B;
                 x->parent->color = R;
                 rotate_left(x->parent);
-                w = x->parent->right; // 更新兄弟指针
+                w = x->parent->right;
             }
 
-            // Case 2: 兄弟是黑色且其子节点均为黑色
+            // Case 2: w is BLACK and both children are BLACK
             if (w->left->color == B && w->right->color == B) {
-                w->color = R;       // 兄弟变红
-                x = x->parent;      // 向上传递双黑
+                w->color = R;
+                x = x->parent; // move up
             } else {
-                // Case 3: 兄弟右子为黑 -> 转换为右子为红的情况
+                // Case 3: left child is red -> right child is black
                 if (w->right->color == B) {
                     w->left->color = B;
                     w->color = R;
@@ -229,14 +223,14 @@ void RankTree::remove_fixup(RBNode* x) {
                     w = x->parent->right;
                 }
 
-                // Case 4: 兄弟右子为红
+                // Case 4: right child is red
                 w->color = x->parent->color;
                 x->parent->color = B;
                 w->right->color = B;
                 rotate_left(x->parent);
-                x = root; // 终止循环
+                x = root; // end
             }
-        } else { // 对称处理 x 是右孩子的情况
+        } else { // symmetric
             RBNode* w = x->parent->left;
 
             if (w->color == R) {
@@ -266,10 +260,15 @@ void RankTree::remove_fixup(RBNode* x) {
         }
     }
 
-    x->color = B; // 确保根节点为黑
+    x->color = B;
 }
 
-
+void RankTree::size_fixup(RBNode* x) {
+    while (x != NIL) {
+        update_size(x);
+        x = x->parent;
+    }
+}
 
 
 int RankTree::get_rank(Team* team) const {
