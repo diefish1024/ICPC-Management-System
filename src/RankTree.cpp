@@ -315,3 +315,25 @@ void RankTree::clear() {
     clear_recursive(root);
     root = NIL;
 }
+
+void RankTree::print_tree_recursive(RBNode* x, int depth) const {
+    if (x == NIL) {
+        return;
+    }
+    print_tree_recursive(x->right, depth + 1);
+    // for (int i = 0; i < depth; ++i) {
+    //     std::cout << "  ";
+    // }
+    std::cout << x->team->name << " " << (x->color == R ? "RED" : "BLACK")
+        << " " << x->size << std::endl;
+    print_tree_recursive(x->left, depth + 1);
+}
+
+void RankTree::print_tree() const {
+    puts("RankTree:");
+    print_tree_recursive(root, 0);
+}
+
+#undef NIL
+#undef R
+#undef B

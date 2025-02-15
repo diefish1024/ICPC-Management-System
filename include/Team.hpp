@@ -43,11 +43,14 @@ private:
     int cnt_teams = 0;
 
 public:
+    TeamManager() = default;
+
     bool add_team(const std::string& name);
     Team& get_team(int id);
     Team& get_team(const std::string& name);
     int get_team_count() const;
     const std::vector<Team>& get_all_teams() const;
+    Team& last_team();
 };
 
 #endif // TEAM_HPP

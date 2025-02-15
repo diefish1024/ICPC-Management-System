@@ -33,6 +33,8 @@ private:
 
     void clear_recursive(RBNode* x);
 
+    void print_tree_recursive(RBNode* x, int depth) const;
+
 public:
     RankTree() : root(nullptr) {}
 
@@ -47,6 +49,9 @@ public:
     void clear();
 
     ~RankTree() { clear(); }
+
+    // DEBUG
+    void print_tree() const;
 };
 
 #endif // RANK_TREE_HPP

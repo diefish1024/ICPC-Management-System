@@ -81,3 +81,7 @@ int TeamManager::get_team_count() const {
 const std::vector<Team>& TeamManager::get_all_teams() const {
     return teams;
 }
+
+Team& TeamManager::last_team() {
+    return teams[cnt_teams - 1];
+}
