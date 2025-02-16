@@ -196,6 +196,10 @@ void RankTree::remove(RBNode* z) {
         y->parent->right = x;
     }
 
+    if (x == NIL) {
+        x = y->parent;
+    }
+
     if (y != z) {
         z->team = y->team;
     }
