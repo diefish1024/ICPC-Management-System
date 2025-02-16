@@ -88,16 +88,22 @@ void RankTree::insert(RBNode* z) {
     RBNode* x = root;
     while (x != NIL) {
         y = x;
-        if (&z->team < &x->team) {
+        if (*(z->team) < *(x->team)) {
             x = x->left;
         } else {
             x = x->right;
         }
+
+        // DEBUG
+        // puts("insert:");
+        // (z->team)->print_team();
+        // (y->team)->print_team();
+        // std::cout << bool(*(z->team) < *(y->team)) << std::endl;
     }
     z->parent = y;
     if (y == NIL) {
         root = z;
-    } else if (&z->team < &y->team) {
+    } else if (*(z->team) < *(y->team)) {
         y->left = z;
     } else {
         y->right = z;
@@ -105,8 +111,12 @@ void RankTree::insert(RBNode* z) {
     z->left = NIL;
     z->right = NIL;
     z->color = R;
+
     insert_fixup(z);
     size_fixup(z);
+    
+    // DEBUG
+    // print_tree();
 }
 
 void RankTree::insert_fixup(RBNode* x) {
@@ -121,9 +131,10 @@ void RankTree::insert_fixup(RBNode* x) {
     }
     // below: x->parent->color == R
     // Case 3
-    if (uncle(x)->color == R) {
+    RBNode* u = uncle(x);
+    if (u != NIL && u->color == R) {
         x->parent->color = B;
-        uncle(x)->color = B;
+        u->color = B;
         x->parent->parent->color = R;
         insert_fixup(x->parent->parent);
         return;
@@ -151,9 +162,9 @@ void RankTree::insert_fixup(RBNode* x) {
 RBNode* RankTree::find(Team* team) const {
     RBNode* x = root;
     while (x != NIL) {
-        if (&team < &x->team) {
+        if (*team < *(x->team)) {
             x = x->left;
-        } else if (&team > &x->team) {
+        } else if (*(x->team) < *team) {
             x = x->right;
         } else {
             return x;
@@ -321,9 +332,9 @@ void RankTree::print_tree_recursive(RBNode* x, int depth) const {
         return;
     }
     print_tree_recursive(x->right, depth + 1);
-    // for (int i = 0; i < depth; ++i) {
-    //     std::cout << "  ";
-    // }
+    for (int i = 0; i < depth; ++i) {
+        std::cout << "  ";
+    }
     std::cout << x->team->name << " " << (x->color == R ? "RED" : "BLACK")
         << " " << x->size << std::endl;
     print_tree_recursive(x->left, depth + 1);

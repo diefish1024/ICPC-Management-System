@@ -7,8 +7,11 @@
 #include <queue>
 
 const int MAX_PROBLEMS = 26;
+const int MAX_TEAM = 10000;
 
 struct Team {
+    static int problem_count;
+
     int id;  // 0-based
     std::string name;
 
@@ -33,6 +36,9 @@ struct Team {
     void unfreeze_problem();
 
     bool operator<(const Team& o) const;
+
+    // DEBUG
+    void print_team() const;
 };
 
 class TeamManager {
@@ -43,7 +49,7 @@ private:
     int cnt_teams = 0;
 
 public:
-    TeamManager() = default;
+    TeamManager();
 
     bool add_team(const std::string& name);
     Team& get_team(int id);
@@ -51,6 +57,9 @@ public:
     int get_team_count() const;
     const std::vector<Team>& get_all_teams() const;
     Team& last_team();
+
+    // DEBUG
+    void print_all_teams() const;
 };
 
 #endif // TEAM_HPP
